@@ -5,9 +5,20 @@ pub mod hardware;
 pub mod json;
 
 #[derive(Deserialize, Serialize, Debug)]
+pub struct FileSource {
+    pub path: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct SerialSource {
+    pub port: String,
+    pub baud_rate: u32,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
 #[serde(tag = "type")]
 #[serde(rename_all = "lowercase")]
-pub enum SourceConf {
-    File { path: String },
-    Serial { path: String, baud: u32 },
+pub enum Source {
+    File(FileSource),
+    Serial(SerialSource),
 }
