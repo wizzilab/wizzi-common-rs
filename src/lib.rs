@@ -22,3 +22,18 @@ pub enum Source {
     File(FileSource),
     Serial(SerialSource),
 }
+
+impl Source {
+    pub fn file(path: &str) -> Self {
+        Source::File(FileSource {
+            path: path.to_string(),
+        })
+    }
+
+    pub fn serial(port: &str, baud_rate: u32) -> Self {
+        Source::Serial(SerialSource {
+            port: port.to_string(),
+            baud_rate,
+        })
+    }
+}
