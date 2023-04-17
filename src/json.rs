@@ -11,13 +11,10 @@ pub enum Error {
         object: serde_json::Value,
         error: String,
     },
-    Io(String),
-}
-
-impl From<std::io::Error> for Error {
-    fn from(e: std::io::Error) -> Self {
-        Error::Io(e.to_string())
-    }
+    BadFile {
+        path: String,
+        error: String,
+    },
 }
 
 pub fn from_str<S: AsRef<str>, T: DeserializeOwned + Sized>(data: S) -> Result<T, Error> {
@@ -42,6 +39,14 @@ pub async fn from_file_path<P: AsRef<std::path::Path>, T: DeserializeOwned + Siz
     path: P,
 ) -> Result<T, Error> {
     let path = path.as_ref();
-    let data = tokio::fs::read_to_string(path).await?;
+    let data = tokio::fs::read_to_string(path)
+        .await
+        .map_err(|e| Error::BadFile {
+            path: path
+                .to_str()
+                .map(|s| s.to_string())
+                .unwrap_or_else(|| "???".to_string()),
+            error: e.to_string(),
+        })?;
     from_str(data)
 }
