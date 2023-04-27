@@ -13,7 +13,7 @@ pub enum Error {
     },
     BadFile {
         path: String,
-        error: String,
+        error: std::io::ErrorKind,
     },
 }
 
@@ -46,7 +46,7 @@ pub async fn from_file_path<P: AsRef<std::path::Path>, T: DeserializeOwned + Siz
                 .to_str()
                 .map(|s| s.to_string())
                 .unwrap_or_else(|| "???".to_string()),
-            error: e.to_string(),
+            error: e.kind(),
         })?;
     from_str(data)
 }
