@@ -1,3 +1,9 @@
+#![deny(clippy::unwrap_used)]
+#![deny(clippy::expect_used)]
+#![deny(clippy::panic_in_result_fn)]
+#![deny(clippy::panic)]
+#![deny(clippy::indexing_slicing)]
+
 use serde::{Deserialize, Serialize};
 
 pub mod dash7;
