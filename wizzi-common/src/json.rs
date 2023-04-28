@@ -32,14 +32,14 @@ pub fn from_str<S: AsRef<str>, T: DeserializeOwned + Sized>(data: S) -> Result<T
 
 #[derive(Debug, Clone)]
 pub enum EncodingError<T: Debug + Clone> {
-    Json { data: T, error: String },
+    Json { data: Box<T>, error: String },
 }
 
 pub fn to_string<T: Serialize + Debug + Clone>(data: &T) -> Result<String, EncodingError<T>> {
     match serde_json::to_string(data) {
         Ok(v) => Ok(v),
         Err(e) => Err(EncodingError::Json {
-            data: data.clone(),
+            data: Box::new(data.clone()),
             error: e.to_string(),
         }),
     }
