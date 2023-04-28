@@ -37,3 +37,40 @@ impl Source {
         })
     }
 }
+
+pub struct FixedSizeQueue<T> {
+    pub data: Vec<T>,
+    pub size: usize,
+}
+
+impl<T> FixedSizeQueue<T> {
+    pub fn new(size: usize) -> Self {
+        FixedSizeQueue {
+            data: Vec::with_capacity(size),
+            size,
+        }
+    }
+
+    pub fn push(&mut self, item: T) {
+        while self.data.len() >= self.size {
+            self.data.remove(0);
+        }
+        self.data.push(item);
+    }
+
+    pub fn iter(&self) -> std::slice::Iter<T> {
+        self.data.iter()
+    }
+
+    pub fn len(&self) -> usize {
+        self.data.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.data.is_empty()
+    }
+
+    pub fn last(&self) -> Option<&T> {
+        self.data.last()
+    }
+}
