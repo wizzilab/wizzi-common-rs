@@ -13,6 +13,7 @@ pub mod json;
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct FileSource {
     pub path: String,
+    pub start_time_us: u128,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -30,9 +31,10 @@ pub enum Source {
 }
 
 impl Source {
-    pub fn file(path: &str) -> Self {
+    pub fn file(path: &str, start_time_us: u128) -> Self {
         Source::File(FileSource {
             path: path.to_string(),
+            start_time_us,
         })
     }
 
