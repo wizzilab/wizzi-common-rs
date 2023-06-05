@@ -29,3 +29,28 @@ pub async fn forward_to_multiple<T: Clone>(
         }
     }
 }
+
+pub async fn forward_map_to_multiple<T, U: Clone, F: Fn(T) -> U>(
+    mut rx: mpsc::Receiver<T>,
+    map: F,
+    listeners: Weak<Mutex<Vec<mpsc::Sender<U>>>>,
+) {
+    let mut to_rm = vec![];
+    while let Some(upload) = rx.recv().await {
+        let upload = map(upload);
+        let listeners = match listeners.upgrade() {
+            Some(listeners) => listeners,
+            None => return,
+        };
+        let mut listeners = listeners.lock().await;
+        for (i, listener) in listeners.iter().enumerate() {
+            if listener.send(upload.clone()).await.is_err() {
+                to_rm.push(i);
+            }
+        }
+
+        for i in to_rm.drain(..).rev() {
+            listeners.remove(i);
+        }
+    }
+}
