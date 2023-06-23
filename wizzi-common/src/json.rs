@@ -1,7 +1,7 @@
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::fmt::Debug;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq, Deserialize, Serialize)]
 pub enum DecodingError {
     Json {
         data: String,
@@ -30,7 +30,7 @@ pub fn from_str<S: AsRef<str>, T: DeserializeOwned + Sized>(data: S) -> Result<T
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Hash, Eq, PartialEq, Deserialize, Serialize)]
 pub enum EncodingError<T: Debug + Clone> {
     Json { data: Box<T>, error: String },
 }
@@ -45,7 +45,7 @@ pub fn to_string<T: Serialize + Debug + Clone>(data: &T) -> Result<String, Encod
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub enum DecodingFileError {
     Json {
         path: String,

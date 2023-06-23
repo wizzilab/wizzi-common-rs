@@ -10,19 +10,19 @@ pub mod dash7;
 pub mod hardware;
 pub mod json;
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Debug, Clone, Hash, Eq, PartialEq, Deserialize, Serialize)]
 pub struct FileSource {
     pub path: String,
     pub start_time_us: u128,
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Debug, Clone, Hash, Eq, PartialEq, Deserialize, Serialize)]
 pub struct SerialSource {
     pub port: String,
     pub baud_rate: u32,
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Debug, Clone, Hash, Eq, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "type")]
 #[serde(rename_all = "lowercase")]
 pub enum Source {
